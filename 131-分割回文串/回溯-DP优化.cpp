@@ -6,6 +6,15 @@ class Solution {
 public:
     vector<vector<string>> partition(string s) {
         int size=s.size();
+        vector<vector<bool>> dp(size,vector<bool>(size,false));
+        for(int right=0;right<size;right++){
+            for(int left=0;left<=right;left++){
+                if(left==right)dp[left][right]=true;
+                else{
+                    if(s[left]==s[right]&&(dp[left+1][right-1]||(right-left==1)))dp[left][right]=true;
+                }
+            }
+        }
         stack<pair<int,int>> stac;
         vector<vector<string>> ans;
         vector<string> current;
@@ -27,16 +36,9 @@ public:
                     int lo=stac.top().first,hi=stac.top().second;
                     bool isBreak=false;
                     for(hi=hi+1;hi<size;hi++){
-                        int i=lo,j=hi;
-                        bool isP=true;
-                        while(i<j){
-                            if(s[i]!=s[j]){
-                                isP=false;
-                                break;
-                            }
-                            i++;
-                            j--;
-                        }
+                        
+                        bool isP=dp[lo][hi];
+                        
                         if(isP){
                             isBreak=true;
                             break;
